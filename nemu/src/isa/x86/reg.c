@@ -41,8 +41,54 @@ void reg_test() {
 }
 
 void isa_reg_display() {
+    for (int i = 0; i < 4; i++) {
+        printf("The value of %s is: %d\n", regsl[i], cpu.gpr[i]._32);
+        printf("The value of %s is: %d\n", regsw[i], cpu.gpr[i]._16);
+        printf("The value of %s is: %d\n", regsb[i], cpu.gpr[i]._8[0]);
+        printf("The value of %s is: %d\n", regsb[i + 4], cpu.gpr[i]._8[1]);
+        printf("\n");
+    }
+    for (int i = 4; i < 8; i++) {
+        printf("The value of %s is: %d\n", regsl[i], cpu.gpr[i]._32);
+        printf("The value of %s is: %d\n", regsw[i], cpu.gpr[i]._16);
+        printf("\n");
+    }
 }
 
 uint32_t isa_reg_str2val(const char *s, bool *success) {
-  return 0;
+    const char *target = s + 1;
+    if (strcmp(target, "pc") == 0) {
+        *success = true;
+        return cpu.pc;
+    }
+    for (int i = 0; i < 4; i++) {
+        if (strcmp(regsl[i], target) == 0) {
+            *success = true;
+            return cpu.gpr[i]._32;
+        }
+        if (strcmp(regsw[i], target) == 0) {
+            *success = true;
+            return cpu.gpr[i]._16;
+        }
+        if (strcmp(regsb[i], target) == 0) {
+            *success = true;
+            return cpu.gpr[i]._8[0];
+        }
+        if (strcmp(regsb[i + 4], target) == 0) {
+            *success = true;
+            return cpu.gpr[i]._8[1];
+        }
+    }
+    for (int i = 4; i < 8; i++) {
+        if (strcmp(regsl[i], target) == 0) {
+            *success = true;
+            return cpu.gpr[i]._32;
+        }
+        if (strcmp(regsw[i], target) == 0) {
+            *success = true;
+            return cpu.gpr[i]._16;
+        }
+    }
+    *success = false;
+    return 0;
 }

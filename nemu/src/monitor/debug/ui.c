@@ -38,6 +38,18 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_info(char *args);
+
+static int cmd_si(char *args);
+
+static int cmd_x(char *args);
+
+static int cmd_p(char *args);
+
+static int cmd_w(char *args);
+
+static int cmd_d(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -46,34 +58,177 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "info", "Display information about regs or watchpoints", cmd_info },
+  { "si", "Exec n instructions and then stop", cmd_si },
+  { "x", "Evaluate the expression EXPR, using the result as the starting memory\n"
+         "address, output N consecutive 4-bytes in hexadecimal", cmd_x },
+  { "p", "Get the value of EXPR", cmd_p },
+  { "w", "Watch the variation of var", cmd_w },
+  { "d", "Delete a wacthpoint", cmd_d },
   /* TODO: Add more commands */
 
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
 
-static int cmd_help(char *args) {
+static int cmd_info(char *args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
-  int i;
 
   if (arg == NULL) {
     /* no argument given */
-    for (i = 0; i < NR_CMD; i ++) {
-      printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
-    }
+    printf("Unknown command, please input \"info r\" or \"info w\"\n");
   }
   else {
-    for (i = 0; i < NR_CMD; i ++) {
-      if (strcmp(arg, cmd_table[i].name) == 0) {
-        printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+    if (strcmp(arg, "r") == 0) {
+        extern void isa_reg_display(void);
+        isa_reg_display();
         return 0;
-      }
     }
-    printf("Unknown command '%s'\n", arg);
+    else if (strcmp(arg, "w") == 0) {
+        extern WP* get_head();
+        WP *t = get_head();
+        while (t) {
+            printf("No.: %d, EXPR: %s\n", t->NO, t->expr);
+            t = t->next;
+        }
+    }
+    else {
+        printf("Unknown command, please input \"info r\" or \"info w\"\n");
+    }
+
   }
   return 0;
+}
+
+static int cmd_help(char *args) {
+    /* extract the first argument */
+    char *arg = strtok(NULL, " ");
+    int i;
+
+    if (arg == NULL) {
+        /* no argument given */
+        for (i = 0; i < NR_CMD; i ++) {
+            printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+        }
+    }
+    else {
+        for (i = 0; i < NR_CMD; i ++) {
+            if (strcmp(arg, cmd_table[i].name) == 0) {
+                printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+                return 0;
+            }
+        }
+        printf("Unknown command '%s'\n", arg);
+    }
+    return 0;
+}
+
+static int cmd_si(char *args) {
+    /* extract the first argument */
+    char *arg = strtok(NULL, " ");
+
+    if (arg == NULL) {
+        /* no argument given */
+        cpu_exec(1);
+    }
+    else {
+        cpu_exec(atoi(arg));
+    }
+    return 0;
+}
+
+static int cmd_x(char *args) {
+    /* extract the first argument */
+    char *arg = strtok(NULL, " ");
+    int N;
+    paddr_t  address;
+
+    if (arg == NULL) {
+        /* no argument given */
+        printf("Unknown command, please input \"x N EXPR\"\n");
+    }
+    else {
+        N = atoi(arg);
+        arg = strtok(NULL, "\0");
+        if (arg == NULL) {
+            /* no argument given */
+            printf("Unknown command, please input \"x N EXPR\"\n");
+        }
+        else {
+            bool t;
+            extern uint32_t expr(char*, bool*);
+            address = expr(arg,&t);
+            int i;
+            extern uint32_t paddr_read(paddr_t, int);
+            for(i = 0; i < N; i++){
+                printf("%08x\n",paddr_read(address,4));
+                address += 4;
+            }
+        }
+    }
+    return 0;
+}
+
+static int cmd_p(char *args) {
+    /* extract the first argument */
+    char *arg = strtok(NULL, "\0");
+
+    if (arg == NULL) {
+        /* no argument given */
+        printf("Unknown command, please input \"p EXPR\"\n");
+    }
+    else {
+        extern uint32_t expr(char *e, bool *success);
+        bool b;
+        uint32_t res = expr(arg, &b);
+        if (res == -1) {
+            panic("expr failed: wrong expression\n");
+        }
+        else {
+            printf("%d\n", res);
+        }
+
+    }
+    return 0;
+}
+
+static int cmd_w(char *args) {
+    char *arg = strtok(NULL, "\0");
+
+    if (arg == NULL) {
+        /* no argument given */
+        printf("Unknown command, please input \"w EXPR\"\n");
+    }
+    else {
+        extern uint32_t expr(char *e, bool *success);
+        bool b;
+        uint32_t res = expr(arg, &b);
+        if (b) {
+            extern WP* new_wp();
+            WP* h = new_wp();
+            h->origin = res;
+            strcpy(h->expr, arg);
+            printf("Create watchpoint successfully. NO.: %d\n", h->NO);
+        }
+    }
+    return 0;
+}
+
+static int cmd_d(char *args) {
+    char *arg = strtok(NULL, "\0");
+
+    if (arg == NULL) {
+        /* no argument given */
+        printf("Unknown command, please input \"w EXPR\"\n");
+    }
+    else {
+        uint32_t t = atoi(arg);
+        void free_wp(WP *wp);
+        extern WP* get_wp_pool();
+        free_wp(&get_wp_pool()[t]);
+    }
+    return 0;
 }
 
 void ui_mainloop(int is_batch_mode) {

@@ -61,6 +61,19 @@ void cpu_exec(uint64_t n) {
   log_clearbuf();
 
     /* TODO: check watchpoints here. */
+    extern uint32_t expr(char *e, bool *success);
+    bool b;
+    extern WP* get_head();
+    WP *t = get_head();
+    while (t != NULL) {
+        uint32_t res = expr(t->expr, &b);
+        if (res != t->origin) {
+            nemu_state.state = NEMU_STOP;
+            Log("Watchpoint is triggered. NO.: %d, EXPR: %s\n", t->NO, t->expr);
+            break;
+        }
+        t = t->next;
+    }
 
 #endif
 
