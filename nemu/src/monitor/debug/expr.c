@@ -12,7 +12,7 @@ enum {
   /* TODO: Add more token types */
 
 };
-:
+
 static struct rule {
   char *regex;
   int token_type;
