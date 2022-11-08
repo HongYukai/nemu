@@ -110,7 +110,7 @@ static OpcodeEntry opcode_table [512] = {
   /* 0xdc */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xe0 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xe4 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0xe8 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0xe8 */	IDEXW(J, call, 1), EMPTY, EMPTY, EMPTY,
   /* 0xec */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xf0 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xf4 */	EMPTY, EMPTY, IDEXW(E, gp3, 1), IDEX(E, gp3),
@@ -193,7 +193,7 @@ static make_EHelper(2byte_esc) {
 }
 
 void isa_exec(vaddr_t *pc) {
-  uint32_t opcode = instr_fetch(pc, 1);
+  uint32_t opcode = instr_fetch(pc, 1);  // read the opcode from memory(opcode is always the first byte)
   decinfo.opcode = opcode;
   set_width(opcode_table[opcode].width);
   idex(pc, &opcode_table[opcode]);
