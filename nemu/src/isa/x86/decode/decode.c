@@ -37,6 +37,18 @@ static inline make_DopHelper(SI) {
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->simm);
 }
+static inline make_DopHelper(REG) {
+    assert(op->width == 0);
+
+    op->type = OP_TYPE_REG;
+
+    op->addr = cpu.ebx;
+
+    rtl_li(&op->val, op->addr);
+
+    print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->addr);
+}
+
 
 /* I386 manual does not contain this abbreviation.
  * It is convenient to merge them into a single helper function.
@@ -271,6 +283,10 @@ make_DHelper(J) {
 
 make_DHelper(D) {
     decode_op_D(pc, id_dest, false);
+}
+
+make_DHelper(push_EBX) {
+    decode_op_REG(pc, id_dest, true);
 }
 
 make_DHelper(push_SI) {
