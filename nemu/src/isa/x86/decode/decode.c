@@ -68,7 +68,6 @@ static inline make_DopHelper(r) {
 
 static inline make_DopHelper(D) {
     instr_fetch(pc, op->width);
-    print_Dop(op->str, OP_STR_SIZE, "%%%s", reg_name(op->reg, op->width));
 }
 
 /* I386 manual does not contain this abbreviation.
