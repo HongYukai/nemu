@@ -37,8 +37,9 @@ static inline make_DopHelper(SI) {
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->simm);
 }
+
 static inline make_DopHelper(REG) {
-    assert(op->width == 0);
+//    assert(op->width == 0);
 
     op->type = OP_TYPE_REG;
 
