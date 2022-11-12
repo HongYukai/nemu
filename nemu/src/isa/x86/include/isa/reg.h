@@ -44,7 +44,7 @@ static inline const char* reg_name(int index, int width) {
   extern const char* regsl[];
   extern const char* regsw[];
   extern const char* regsb[];
-  assert(index >= 0 && index < 8);
+  assert(index >= 0 && index < 9);
 
   switch (width) {
     case 4: return regsl[index];
