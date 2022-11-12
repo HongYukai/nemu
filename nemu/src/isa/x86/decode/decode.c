@@ -40,8 +40,6 @@ static inline make_DopHelper(SI) {
 
 static inline make_DopHelper(REG) {
 //    assert(op->width == 0);
-    uint8_t width = op->width;
-    op->width = width;
     op->type = OP_TYPE_REG;
 
     op->addr = cpu.ebx;
