@@ -66,6 +66,11 @@ static inline make_DopHelper(r) {
   print_Dop(op->str, OP_STR_SIZE, "%%%s", reg_name(op->reg, op->width));
 }
 
+static inline make_DopHelper(D) {
+    instr_fetch(pc, op->width);
+    print_Dop(op->str, OP_STR_SIZE, "%%%s", reg_name(op->reg, op->width));
+}
+
 /* I386 manual does not contain this abbreviation.
  * We decode everything of modR/M byte by one time.
  */
@@ -90,6 +95,7 @@ static inline make_DopHelper(O) {
 
   print_Dop(op->str, OP_STR_SIZE, "0x%x", op->addr);
 }
+
 
 /* Eb <- Gb
  * Ev <- Gv
@@ -262,6 +268,10 @@ make_DHelper(J) {
   decode_op_SI(pc, id_dest, false);
   // the target address can be computed in the decode stage
   decinfo.jmp_pc = id_dest->simm + *pc;
+}
+
+make_DHelper(D) {
+    decode_op_D(pc, id_dest, false);
 }
 
 make_DHelper(push_SI) {

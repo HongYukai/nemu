@@ -31,6 +31,11 @@ make_EHelper(call) {
   print_asm("call %x", decinfo.jmp_pc);
 }
 
+
+make_EHelper(dop) {
+    print_asm("dop");
+}
+
 make_EHelper(ret) {
   TODO();
 

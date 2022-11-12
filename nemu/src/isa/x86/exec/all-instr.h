@@ -3,6 +3,7 @@
 make_EHelper(mov);
 make_EHelper(call);
 make_EHelper(push);
+make_EHelper(dop);
 
 make_EHelper(operand_size);
 
