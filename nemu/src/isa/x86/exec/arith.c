@@ -13,6 +13,15 @@ make_EHelper(sub) {
   print_asm_template2(sub);
 }
 
+make_EHelper(xor) {
+    rtl_xor(&s0, &id_dest->val, &id_src->val);
+    operand_write(id_dest, &s0);
+    rtl_li(&s1, 0);
+    rtl_set_CF(&s1);
+    rtl_set_OF(&s1);
+    print_asm_template2(xor);
+}
+
 make_EHelper(cmp) {
   TODO();
 

@@ -51,7 +51,7 @@ typedef struct {
             uint32_t VM : 1;
             uint32_t no : 14;
         };
-    };
+    }eflags;
   vaddr_t pc;
 } CPU_state;
 
