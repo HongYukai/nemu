@@ -23,9 +23,33 @@ typedef struct {
             uint32_t _32;
             uint16_t _16;
             uint8_t _8[2];
-        } gpr[9];
+        } gpr[8];
         struct {
-            rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi, eflags;
+            rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
+        };
+    };
+    union {
+        uint32_t ef;
+        struct {
+            uint32_t CF : 1;
+            uint32_t POS1 : 1;
+            uint32_t PF : 1;
+            uint32_t POS3 : 1;
+            uint32_t AF : 1;
+            uint32_t POS5 : 1;
+            uint32_t ZF : 1;
+            uint32_t SF : 1;
+            uint32_t TF : 1;
+            uint32_t IF : 1;
+            uint32_t DF : 1;
+            uint32_t OF : 1;
+            uint32_t OL : 1;
+            uint32_t IP : 1;
+            uint32_t NT : 1;
+            uint32_t POS15 : 1;
+            uint32_t RF : 1;
+            uint32_t VM : 1;
+            uint32_t no : 14;
         };
     };
   vaddr_t pc;
@@ -44,7 +68,7 @@ static inline const char* reg_name(int index, int width) {
   extern const char* regsl[];
   extern const char* regsw[];
   extern const char* regsb[];
-  assert(index >= 0 && index < 9);
+  assert(index >= 0 && index < 8);
 
   switch (width) {
     case 4: return regsl[index];
