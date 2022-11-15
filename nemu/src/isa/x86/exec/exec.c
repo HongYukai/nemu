@@ -15,7 +15,8 @@ static make_EHelper(2byte_esc);
     /* 0x00 */	item0, item1, item2, item3, \
     /* 0x04 */	item4, item5, item6, item7  \
   }; \
-static make_EHelper(name) { \
+static make_EHelper(name) {                                                      \
+  printf("%d\n", decinfo.isa.ext_opcode);                                        \
   idex(pc, &concat(opcode_table_, name)[decinfo.isa.ext_opcode]); \
 }
 
