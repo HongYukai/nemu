@@ -31,24 +31,15 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  op->simm = (int32_t) instr_fetch(pc, op->width);
+  //TODO();
+  op->simm = instr_fetch(pc,op->width);
+  int num = 32-8*op->width;
+  op->simm = (op->simm<<num)>>num;
 
   rtl_li(&op->val, op->simm);
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->simm);
 }
-
-static inline make_DopHelper(REG) {
-//    assert(op->width == 0);
-    op->type = OP_TYPE_REG;
-
-    op->addr = cpu.ebx;
-
-    rtl_li(&op->val, op->addr);
-
-    print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->addr);
-}
-
 
 /* I386 manual does not contain this abbreviation.
  * It is convenient to merge them into a single helper function.
@@ -78,10 +69,6 @@ static inline make_DopHelper(r) {
   print_Dop(op->str, OP_STR_SIZE, "%%%s", reg_name(op->reg, op->width));
 }
 
-static inline make_DopHelper(D) {
-    instr_fetch(pc, op->width);
-}
-
 /* I386 manual does not contain this abbreviation.
  * We decode everything of modR/M byte by one time.
  */
@@ -106,7 +93,6 @@ static inline make_DopHelper(O) {
 
   print_Dop(op->str, OP_STR_SIZE, "0x%x", op->addr);
 }
-
 
 /* Eb <- Gb
  * Ev <- Gv
@@ -281,18 +267,9 @@ make_DHelper(J) {
   decinfo.jmp_pc = id_dest->simm + *pc;
 }
 
-make_DHelper(D) {
-    decode_op_D(pc, id_dest, false);
-}
-
-make_DHelper(push_EBX) {
-    decode_op_REG(pc, id_dest, true);
-}
-
 make_DHelper(push_SI) {
   decode_op_SI(pc, id_dest, true);
 }
-
 
 make_DHelper(in_I2a) {
   id_src->width = 1;

@@ -41,54 +41,35 @@ void reg_test() {
 }
 
 void isa_reg_display() {
-    for (int i = 0; i < 4; i++) {
-        printf("The value of %s is: %d\n", regsl[i], cpu.gpr[i]._32);
-        printf("The value of %s is: %d\n", regsw[i], cpu.gpr[i]._16);
-        printf("The value of %s is: %d\n", regsb[i], cpu.gpr[i]._8[0]);
-        printf("The value of %s is: %d\n", regsb[i + 4], cpu.gpr[i]._8[1]);
-        printf("\n");
-    }
-    for (int i = 4; i < 8; i++) {
-        printf("The value of %s is: %d\n", regsl[i], cpu.gpr[i]._32);
-        printf("The value of %s is: %d\n", regsw[i], cpu.gpr[i]._16);
-        printf("\n");
-    }
+	printf("eax\t0x%-8x\t%u\n",cpu.eax,cpu.eax);	
+	printf("ecx\t0x%-8x\t%u\n",cpu.ecx,cpu.ecx);
+	printf("edx\t0x%-8x\t%u\n",cpu.edx,cpu.edx);
+	printf("ebx\t0x%-8x\t%u\n",cpu.ebx,cpu.ebx);
+	printf("esp\t0x%-8x\t%u\n",cpu.esp,cpu.esp);
+	printf("ebp\t0x%-8x\t%u\n",cpu.ebp,cpu.ebp);
+	printf("esi\t0x%-8x\t%u\n",cpu.esi,cpu.esi);
+	printf("edi\t0x%-8x\t%u\n",cpu.edi,cpu.edi);
+	printf("pc\t0x%-8x\t%u\n",cpu.pc,cpu.pc);
 }
 
 uint32_t isa_reg_str2val(const char *s, bool *success) {
-    const char *target = s + 1;
-    if (strcmp(target, "pc") == 0) {
-        *success = true;
-        return cpu.pc;
-    }
-    for (int i = 0; i < 4; i++) {
-        if (strcmp(regsl[i], target) == 0) {
-            *success = true;
-            return cpu.gpr[i]._32;
-        }
-        if (strcmp(regsw[i], target) == 0) {
-            *success = true;
-            return cpu.gpr[i]._16;
-        }
-        if (strcmp(regsb[i], target) == 0) {
-            *success = true;
-            return cpu.gpr[i]._8[0];
-        }
-        if (strcmp(regsb[i + 4], target) == 0) {
-            *success = true;
-            return cpu.gpr[i]._8[1];
-        }
-    }
-    for (int i = 4; i < 8; i++) {
-        if (strcmp(regsl[i], target) == 0) {
-            *success = true;
-            return cpu.gpr[i]._32;
-        }
-        if (strcmp(regsw[i], target) == 0) {
-            *success = true;
-            return cpu.gpr[i]._16;
-        }
-    }
-    *success = false;
+	int name_len = strlen(s);
+	int width = 4;
+	if(name_len == 3)width=4;
+	else if(name_len ==2){
+		if(s[1]=='h'||s[1]=='H'||s[1]=='l'||s[1]=='L')width=1;
+		else width=2;
+	}
+	for(int i=R_EAX;i<=R_EDI;i++){
+		if(strcmp(s,reg_name(i,width))==0){
+			switch(width){
+				case 4:return reg_l(i);
+				case 2:return reg_w(i);
+				case 1:return reg_b(i);
+			}
+		}
+	}
+
+	
     return 0;
 }
