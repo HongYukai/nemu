@@ -59,3 +59,7 @@ make_EHelper(call_rm) {
 make_EHelper(endbr) {
     print_asm("endbr32");
 }
+
+make_EHelper(notrack) {
+        print_asm("notrack");
+}
