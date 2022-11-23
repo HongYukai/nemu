@@ -308,7 +308,8 @@ make_DHelper(endbr) {
 }
 
 make_DHelper(notrack) {
-        instr_fetch(pc, 6);
+    instr_fetch(pc, 6);
+    decinfo.jmp_pc = 4 * cpu.eax + 0x1011c0;
 }
 
 void operand_write(Operand *op, rtlreg_t* src) {

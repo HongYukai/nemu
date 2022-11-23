@@ -61,5 +61,6 @@ make_EHelper(endbr) {
 }
 
 make_EHelper(notrack) {
+        rtl_j(decinfo.jmp_pc);
         print_asm("notrack");
 }
