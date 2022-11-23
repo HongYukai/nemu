@@ -308,7 +308,7 @@ make_DHelper(endbr) {
 }
 
 make_DHelper(notrack) {
-    instr_fetch(pc, 6);
+    instr_fetch(pc, 7);
     decinfo.jmp_pc = 4 * cpu.eax + 0x1011c0 + *pc;
 }
 
