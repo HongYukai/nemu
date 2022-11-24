@@ -31,7 +31,10 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  TODO();
+  //TODO();
+  op->simm = instr_fetch(pc,op->width);
+  int num = 32-8*op->width;
+  op->simm = (op->simm<<num)>>num;
 
   rtl_li(&op->val, op->simm);
 
@@ -298,6 +301,15 @@ make_DHelper(out_a2dx) {
   rtl_lr(&id_dest->val, R_DX, 2);
 
   print_Dop(id_dest->str, OP_STR_SIZE, "(%%dx)");
+}
+
+make_DHelper(endbr) {
+    instr_fetch(pc, 3);
+}
+
+make_DHelper(notrack) {
+    instr_fetch(pc, 7);
+    decinfo.jmp_pc = 4 * cpu.eax + 0x001011c0 + *pc;
 }
 
 void operand_write(Operand *op, rtlreg_t* src) {
