@@ -1,0 +1,28 @@
+
+/home/hongyk/ics2019/nexus-am/tests/cputest/build/dummy-x86-nemu.elf:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00100000 <_start>:
+  100000:	bd 00 00 00 00       	mov    $0x0,%ebp
+  100005:	bc 00 90 10 00       	mov    $0x109000,%esp
+  10000a:	e8 09 00 00 00       	call   100018 <_trm_init>
+  10000f:	90                   	nop
+
+00100010 <main>:
+  100010:	f3 0f 1e fb          	endbr32 
+  100014:	31 c0                	xor    %eax,%eax
+  100016:	c3                   	ret    
+  100017:	90                   	nop
+
+00100018 <_trm_init>:
+  100018:	f3 0f 1e fb          	endbr32 
+  10001c:	55                   	push   %ebp
+  10001d:	89 e5                	mov    %esp,%ebp
+  10001f:	83 ec 14             	sub    $0x14,%esp
+  100022:	68 00 00 00 00       	push   $0x0
+  100027:	e8 e4 ff ff ff       	call   100010 <main>
+  10002c:	d6                   	(bad)  
+  10002d:	83 c4 10             	add    $0x10,%esp
+  100030:	eb fe                	jmp    100030 <_trm_init+0x18>

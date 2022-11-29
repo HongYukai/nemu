@@ -59,12 +59,19 @@ int _open(const char *path, int flags, mode_t mode) {
 }
 
 int _write(int fd, void *buf, size_t count) {
-  _exit(SYS_write);
-  return 0;
+    return _syscall_(SYS_write, fd, buf, count);
 }
 
+extern char _end;
+intptr_t program_break = (intptr_t)&_end;
 void *_sbrk(intptr_t increment) {
-  return (void *)-1;
+    intptr_t old_program_break = program_break;
+    if (_syscall_(SYS_brk, program_break + increment, 0, 0) == 0) { //系统调用
+        program_break = program_break + increment; //记录增加后的位置
+        return (void *)old_program_break; //若成功，则返回原位置
+    }
+    else
+        return (void *)-1;
 }
 
 int _read(int fd, void *buf, size_t count) {

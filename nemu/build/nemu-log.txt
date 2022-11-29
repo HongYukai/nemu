@@ -1,0 +1,9 @@
+[1;34m[src/monitor/monitor.c,36,load_img] No image is given. Use the default build-in image.[0m
+[1;34m[src/memory/memory.c,16,register_pmem] Add 'pmem' at [0x00000000, 0x07ffffff][0m
+[1;34m[src/monitor/monitor.c,20,welcome] Debug: [1;32mON[0m[0m
+[1;34m[src/monitor/monitor.c,21,welcome] If debug mode is on, A log file will be generated to record every instruction NEMU executes. This may lead to a large log file. If it is not necessary, you can turn it off in include/common.h.[0m
+[1;34m[src/monitor/monitor.c,28,welcome] Build time: 06:46:58, Nov  7 2022[0m
+[1;34m[src/monitor/debug/expr.c,84,make_token] match rules[9] = "[0-9]+" at position 0 with len 1: 2[0m
+[1;34m[src/monitor/debug/expr.c,84,make_token] match rules[0] = "\s+" at position 1 with len 1:  [0m
+[1;34m[src/monitor/debug/expr.c,84,make_token] match rules[1] = "\+" at position 2 with len 1: +[0m
+[1;34m[src/monitor/debug/expr.c,84,make_token] match rules[9] = "[0-9]+" at position 3 with len 1: 4[0m
